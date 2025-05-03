@@ -17,6 +17,10 @@ mail = Mail(app)
 courses = [
     {"id": 1, "title": "دورة تعلم بايثون", "description": "من المبتدئ إلى المتقدم", "price": 10, "link": "https://drive.google.com/xyz"},
     {"id": 2, "title": "دورة تصميم واجهات", "description": "UI/UX", "price": 15, "link": "https://drive.google.com/abc"},
+    {"id": 3, "title": "دورة تعلم بايثون", "description": "من المبتدئ إلى المتقدم", "price": 10, "link": "https://drive.google.com/xyz"},
+    {"id": 4, "title": "دورة تصميم واجهات", "description": "UI/UX", "price": 15, "link": "https://drive.google.com/abc"},
+    {"id": 5, "title": "دورة تعلم بايثون", "description": "من المبتدئ إلى المتقدم", "price": 10, "link": "https://drive.google.com/xyz"},
+    {"id": 6, "title": "دورة تصميم واجهات", "description": "UI/UX", "price": 15, "link": "https://drive.google.com/abc"},
 ]
 
 @app.route('/')

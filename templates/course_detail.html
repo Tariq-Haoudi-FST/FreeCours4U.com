@@ -3,17 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <title>{{ course.title }}</title>
+
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 text-gray-800">
-  <div class="container mx-auto py-10 max-w-2xl">
-    <h1 class="text-3xl font-bold mb-4">{{ course.title }}</h1>
-    <p class="text-gray-700 mb-4">{{ course.description }}</p>
-    <p class="font-bold text-blue-600 mb-6">السعر: {{ course.price }}$</p>
-    <a href="{{ url_for('checkout', course_id=course.id) }}"
-       class="px-6 py-2 bg-green-500 text-white rounded hover:bg-green-600">
-       اشترِ الآن
-    </a>
+
+  <!-- Navbar -->
+  <nav class="bg-gradient-to-r from-blue-600 to-blue-400 text-white py-4">
+    <div class="container mx-auto flex justify-between items-center">
+      <a href="#" class="text-2xl font-extrabold tracking-wider text-white">موقع الدورات</a>
+      <div class="space-x-8 font-medium text-lg">
+        <a href="/" class="hover:text-blue-300 transition-all">الرئيسية</a>
+        <a href="#special-offers" class="hover:text-blue-300 transition-all">العروض الخاصة</a>
+        <a href="#courses-list" class="hover:text-blue-300 transition-all">قائمة الدورات</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Course Detail -->
+  <div class="container mx-auto py-16 px-4 max-w-2xl">
+    <div class="bg-white rounded-xl shadow-lg p-8">
+      <h1 class="text-3xl font-bold text-blue-600 mb-6">{{ course.title }}</h1>
+      <p class="text-lg text-gray-700 mb-4">{{ course.description }}</p>
+      <p class="font-bold text-xl text-green-600 mb-6">السعر: {{ course.price }}$</p>
+      <a href="{{ url_for('checkout', course_id=course.id) }}"
+         class="inline-block px-6 py-3 bg-green-500 text-white text-lg rounded-lg hover:bg-green-600 transition-all shadow-md">
+         اشترِ الآن
+      </a>
+    </div>
   </div>
+
 </body>
 </html>
