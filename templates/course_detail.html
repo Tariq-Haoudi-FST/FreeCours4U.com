@@ -1,0 +1,20 @@
+# --- templates/course_detail.html ---
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ course.title }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-800">
+    <div class="container mx-auto p-6">
+        <div class="bg-white p-6 rounded shadow">
+            <h1 class="text-2xl font-bold mb-2">{{ course.title }}</h1>
+            <p class="mb-4">{{ course.description }}</p>
+            <p class="text-green-600 font-semibold">السعر: {{ course.price }}</p>
+            <a href="/checkout" class="inline-block mt-4 px-6 py-2 bg-green-600 text-white rounded">الانتقال إلى الدفع</a>
+        </div>
+    </div>
+</body>
+</html>
