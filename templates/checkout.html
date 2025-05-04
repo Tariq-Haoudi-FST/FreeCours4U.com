@@ -45,7 +45,6 @@
         },
         onApprove: function(data, actions) {
           return actions.order.capture().then(function(details) {
-            // بعد الدفع، أرسل البيانات إلى السيرفر
             fetch("/checkout/{{ course.id }}", {
               method: "POST",
               headers: {
@@ -54,7 +53,7 @@
               body: new URLSearchParams({
                 full_name: document.getElementById("full_name").value,
                 email: document.getElementById("email").value,
-                card_number: "paypal",  // بيانات وهمية لأننا لا نحتاجها
+                card_number: "paypal",
                 expiry: "paypal",
                 cvv: "paypal"
               })
