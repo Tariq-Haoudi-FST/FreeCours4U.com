@@ -4,34 +4,44 @@ from flask_mail import Mail, Message
 
 app = Flask(__name__)
 
-# إعدادات قاعدة البيانات (MySQL عن بعد)
+# إعدادات قاعدة البيانات
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://sql7776904:25FjtMPp8T@sql7.freesqldatabase.com:3306/sql7776904'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-# نموذج الجدول
+# نموذج الجدول الجديد
 class Course(db.Model):
-    __tablename__ = 'courses'
+    __tablename__ = 'textes_complets'
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100))
-    description = db.Column(db.String(255))
-    price = db.Column(db.Float)
-    link = db.Column(db.String(255))
+    title = db.Column(db.String(255))
+    description = db.Column(db.Text)
+    price = db.Column(db.Numeric(10, 2))
+    link = db.Column(db.Text)
+    categorie = db.Column(db.String(100))
+    image_url = db.Column(db.Text)
 
-# إعدادات البريد الإلكتروني
+# إعدادات البريد
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = 'tariq.haoudi@etu.uae.ac.ma'       # بريدك الجامعي
-app.config['MAIL_PASSWORD'] = 'cjgf gmzu mbef lwlh'              # كلمة مرور التطبيق
+app.config['MAIL_USERNAME'] = 'tariq.haoudi@etu.uae.ac.ma'
+app.config['MAIL_PASSWORD'] = 'cjgf gmzu mbef lwlh'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
 
-# الصفحة الرئيسية
+# الصفحة الرئيسية تعرض كل الدورات وجميع التصنيفات في القائمة
 @app.route('/')
 def index():
+    categories = db.session.query(Course.categorie).distinct().all()
     courses = Course.query.all()
-    return render_template('index.html', courses=courses)
+    return render_template('index.html', courses=courses, categories=categories)
+
+# صفحة لعرض الدورات حسب التصنيف
+@app.route('/category/<categorie>')
+def category_view(categorie):
+    categories = db.session.query(Course.categorie).distinct().all()
+    courses = Course.query.filter_by(categorie=categorie).all()
+    return render_template('category.html', courses=courses, categorie=categorie, categories=categories)
 
 # صفحة تفاصيل الدورة
 @app.route('/course/<int:course_id>')
