@@ -1,13 +1,13 @@
 {% extends "base.html" %}
-{% block title %}Catalogue des Cours / قائمة الدورات{% endblock %}
+{% block title %}Recherche - {{ query }}{% endblock %}
 {% block content %}
 
 <!-- Swiper CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
 
-<!-- Section Offres -->
+<!-- Section Swiper des Offres -->
 <section class="container my-5">
-  <h1 class="text-center text-3xl font-bold text-indigo-600 mb-6">🌟 Offres Spéciales / عروضنا الخاصة</h1>
+  <h2 class="text-center text-2xl font-semibold text-indigo-600 mb-4">🌟 Suggestions ou Offres</h2>
 
   <div class="swiper offers-swiper swiper-container relative">
     <div class="swiper-wrapper">
@@ -31,17 +31,10 @@
   </div>
 </section>
 
-<!-- Section Cours -->
+<!-- Résultats de la Recherche -->
 <section class="container my-5">
-  <h1 class="text-center text-3xl font-bold text-primary mb-4">📚 Nos Cours / دوراتنا التعليمية</h1>
+  <h1 class="text-center text-3xl font-bold text-indigo-600 mb-6">Résultats pour "{{ query }}"</h1>
 
-  <!-- Barre de recherche -->
-  <form action="{{ url_for('search') }}" method="get" class="mb-4">
-    <input type="text" name="query" placeholder="Rechercher un cours" class="w-full p-2 border rounded">
-    <button type="submit" class="btn btn-primary">Rechercher</button>
-  </form>
-
-  <!-- Liste des Cours -->
   <div class="row">
     {% for course in courses.items %}
     <div class="col-md-4 mb-4">
@@ -71,7 +64,7 @@
     <ul class="pagination justify-content-center">
       {% if courses.has_prev %}
       <li class="page-item">
-        <a class="page-link" href="{{ url_for('index', page=courses.prev_num) }}" aria-label="Précédent">
+        <a class="page-link" href="{{ url_for('search', query=query, page=courses.prev_num) }}" aria-label="Précédent">
           <span aria-hidden="true">&laquo;</span>
         </a>
       </li>
@@ -86,7 +79,7 @@
           {% if num == courses.page %}
             <li class="page-item active"><span class="page-link">{{ num }}</span></li>
           {% else %}
-            <li class="page-item"><a class="page-link" href="{{ url_for('index', page=num) }}">{{ num }}</a></li>
+            <li class="page-item"><a class="page-link" href="{{ url_for('search', query=query, page=num) }}">{{ num }}</a></li>
           {% endif %}
         {% else %}
           <li class="page-item disabled"><span class="page-link">...</span></li>
@@ -95,7 +88,7 @@
 
       {% if courses.has_next %}
       <li class="page-item">
-        <a class="page-link" href="{{ url_for('index', page=courses.next_num) }}" aria-label="Suivant">
+        <a class="page-link" href="{{ url_for('search', query=query, page=courses.next_num) }}" aria-label="Suivant">
           <span aria-hidden="true">&raquo;</span>
         </a>
       </li>

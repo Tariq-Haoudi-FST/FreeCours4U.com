@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}{{ action }} une offre{% endblock %}
+{% block content %}
+  <!-- Section principale -->
+  <section class="container py-4">
+    <h2>{{ action }} une offre</h2>
+    <form method="POST">
+        <input class="form-control mb-2" name="title" value="{{ offer.title if offer else '' }}" placeholder="Titre" required>
+        <textarea class="form-control mb-2" name="description" placeholder="Description">{{ offer.description if offer else '' }}</textarea>
+        <input class="form-control mb-2" name="image_url" value="{{ offer.image_url if offer else '' }}" placeholder="URL de l’image" required>
+        <input class="form-control mb-2" name="link" value="{{ offer.link if offer else '' }}" placeholder="Lien de l'offre" required>
+        <button class="btn btn-primary">{{ action }}</button>
+    </form>
+    <div class="advertisement">
+        <!-- Emplacement pour la publicité -->
+        <img src="https://via.placeholder.com/468x60?text=Publicité" alt="Publicisation">
+    </div>
+  </section>
+{% endblock %}
