@@ -72,6 +72,7 @@ def category_view(categorie):
     search = request.args.get('search', '').strip()
 
     query = Course.query.filter_by(categorie=categorie)
+    offers = Offer.query.all()
 
     if search:
         query = query.filter(Course.title.ilike(f'%{search}%'))
@@ -82,12 +83,14 @@ def category_view(categorie):
                            courses=courses, 
                            categorie=categorie, 
                            categories=categories,
+                            offers=offers,
                            search=search)
 
 @app.route('/course/<int:course_id>')
 def course_detail(course_id):
+    categories = db.session.query(Course.categorie).distinct().all()
     course = Course.query.get_or_404(course_id)
-    return render_template('course_detail.html', course=course)
+    return render_template('course_detail.html',categories=categories, course=course)
 
 @app.route('/checkout/<int:course_id>', methods=["GET", "POST"])
 def checkout(course_id):

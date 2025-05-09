@@ -2,96 +2,164 @@
 <html lang="fr" dir="ltr">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}FreeCours4U{% endblock %}</title>
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-  <!-- Tailwind CSS -->
+
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Swiper CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+  
+  <!-- Bootstrap CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
   <style>
-    /* Styles pour les publicités */
-    .advertisement {
-      margin: 20px 0;
+    body {
+      background: radial-gradient(circle at top left, #0f172a, #1e293b);
+      color: #e5e7eb;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding-top: 10px;
+    }
+
+    /* Navbar customization */
+    .navbar-custom {
+      background-color: #111827;
+    }
+
+    .navbar-custom .nav-link {
+      color: #f1f5f9;
+    }
+
+    .navbar-custom .nav-link:hover {
+      background-color: #334155;
+      color: #ffffff;
+    }
+
+    /* Footer */
+    footer {
+      background-color: #111827;
+      color: #f1f5f9;
       text-align: center;
+      padding: 1rem 0;
+    }
+
+    /* Main content section */
+    main {
+      background-color: #f8fafc;
+      color: #111827;
+      border-radius: 0.75rem;
+      padding: 2rem;
+      margin: 1rem auto;
+      max-width: 1200px;
+    }
+
+    /* Article card hover effect */
+    .article {
+      background-color: #1e293b;
+      border-radius: 0.75rem;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    .article:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
     }
   </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
-  <nav class="bg-gray-800">
+
+<body>
+  
+<section class="position-relative text-white" style="background-image: url('https://png.pngtree.com/png-vector/20221017/ourmid/pngtree-vectorized-abstract-stage-background-with-magical-gold-burst-lighting-vector-png-image_25588382.jpg'); background-size: cover; background-position: center; height: 50px;">
+  <div class="container h-12 d-flex align-items-center justify-content-between bg-dark bg-opacity-50 px-4 rounded">
+    <div class="d-flex flex-column">
+      <h6 class="mb-1 fw-bold">🎉 promotion d'ouverture !</h6>
+      <small>Offres limitées sur nos cours – Jusqu'à -90% !</small>
+    </div>
+    <a href="#" class="btn btn-warning btn-sm fw-bold">Voir l'offre</a>
+  </div>
+</section>
+
+
+  <!-- Navbar -->
+  <nav class="bg-gray-900 navbar-custom">
     <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-      <div class="relative flex h-16 items-center justify-between">
+      <div class="relative flex items-center justify-between h-16">
         <!-- Mobile menu button -->
         <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
-          <button type="button" class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:ring-2 focus:ring-white">
-            <svg class="block size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
+          <button onclick="toggleMenu()" type="button" class="inline-flex items-center justify-center p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
         </div>
 
         <!-- Logo -->
-        <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-          <div class="flex shrink-0 items-center">
-            <img class="h-8 w-auto" src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500" alt="Logo">
+        <div class="flex items-center justify-center sm:items-stretch sm:justify-start">
+          <div class="flex flex-shrink-0 items-center">
+            <img class="h-8 w-auto" src="https://media.istockphoto.com/id/482313962/vector/black-square-button-with-big-spider.jpg?s=1024x1024&w=is&k=20&c=MFueur5Zdb6kQFwbJFsIG53ORpPn0m0HnBJd4PEpzjQ=" alt="Logo">
           </div>
+        </div>
 
-        <!-- Desktop menu -->
-        <div class="hidden sm:ml-6 sm:block">
+        <!-- Desktop Menu -->
+        <div class="hidden sm:block sm:ml-6">
           <div class="flex space-x-4">
-            <!-- Catégories dynamiques -->
+            <a href="{{ url_for('index') }}" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Home</a>
             {% for cat in categories %}
-              <a href="{{ url_for('category_view', categorie=cat[0]) }}" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
-                {{ cat[0] }}
-              </a>
+              <a href="{{ url_for('category_view', categorie=cat[0]) }}" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">{{ cat[0] }}</a>
             {% endfor %}
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- Profile icon -->
-      <div class="absolute inset-y-0 right-0 flex items-center pr-2">
-        <button type="button" class="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white">
-          <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"/>
-          </svg>
-        </button>
-      </div>
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="sm:hidden hidden px-2 pt-2 pb-3 space-y-1">
+      {% for cat in categories %}
+        <a href="{{ url_for('category_view', categorie=cat[0]) }}" class="block text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-base font-medium">{{ cat[0] }}</a>
+      {% endfor %}
     </div>
   </nav>
 
+  <!-- Main Content -->
   <main>
     {% block content %}{% endblock %}
   </main>
 
-  <!-- Section Contact -->
-  <section class="container my-5">
-    <h2 class="text-center text-primary mb-4">📞 Contactez-nous / اتصل بنا</h2>
-    <p class="text-center">Pour toute question ou information supplémentaire, veuillez nous contacter par email ou téléphone.</p>
-    <div class="d-flex justify-content-center gap-3">
-      <a href="mailto:info@dawrat.com" class="btn btn-outline-primary">Email</a>
-      <a href="tel:+123456789" class="btn btn-outline-primary">Téléphone</a>
+  <!-- Contact Section -->
+  <section class="container my-5 bg-white text-gray-900 p-4 rounded shadow">
+    <h2 class="text-center mb-4 text-xl font-bold">📞 Contactez-nous</h2>
+    <p class="text-center mb-3">Pour toute question ou information supplémentaire, contactez-nous :</p>
+    <div class="d-flex justify-content-center gap-3 flex-wrap">
+      <a href="mailto:tariq.haoudi@etu.uae.ac.ma" class="btn btn-dark">Email</a>
+      <a href="tel:+212718002689" class="btn btn-dark">Téléphone</a>
     </div>
   </section>
 
-  <!-- JS SCRIPTS -->
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-gray-300 text-center py-4 mt-4">
+    <div class="container mx-auto flex flex-col md:flex-row justify-center items-center gap-4">
+      <p class="mb-2 md:mb-0">&copy; 2024 FreeCours4U. Tous droits réservés.</p>
+      <div class="flex gap-4">
+        <a href="{{ url_for('about') }}" class="hover:underline hover:text-white">À propos</a>
+        <a href="{{ url_for('privacy') }}" class="hover:underline hover:text-white">Confidentialité</a>
+      </div>
+    </div>
+  </footer>
+
   <!-- Swiper JS -->
   <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+  
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-  <!-- Script pour basculer la langue -->
+  
+  <!-- JS for menu toggle -->
   <script>
-    function toggleLanguage() {
-      const html = document.documentElement;
-      if (html.lang === "fr") {
-        html.lang = "ar";
-        html.dir = "rtl";
-      } else {
-        html.lang = "fr";
-        html.dir = "ltr";
-      }
+    function toggleMenu() {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('hidden');
     }
   </script>
+
 </body>
 </html>

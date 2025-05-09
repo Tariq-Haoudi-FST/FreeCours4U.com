@@ -1,27 +1,35 @@
-{% extends "base.html" %}
-{% block title %}Paiement - {{ course.title }}{% endblock %}
-{% block content %}
-  <!-- Section principale -->
-  <section class="container mx-auto py-10 max-w-md">
-    <h2 class="text-2xl font-bold mb-6">Paiement pour : {{ course.title }}</h2>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>الدفع - {{ course.title }}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- PayPal SDK -->
+  <script src="https://www.paypal.com/sdk/js?client-id=BAAJcox7yFIYUK_9fr0DsH_V-JEoMg4YTjK2tsURwsHGJ2mwE88hNibmgeqC4MMOFptDpW7FVjSJTeHUWc&currency=USD"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+  <div class="container mx-auto py-10 max-w-md">
+    <h2 class="text-2xl font-bold mb-6">💳 الدفع لـ: {{ course.title }}</h2>
 
     {% if success %}
       <div class="bg-green-100 text-green-800 p-4 rounded mb-4">
-        ✅ Paiement réussi ! Le lien du cours a été envoyé à votre email.
+        ✅ تم الدفع بنجاح! تم إرسال رابط الدورة إلى بريدك.
       </div>
     {% elif success is not none %}
       <div class="bg-red-100 text-red-800 p-4 rounded mb-4">
-        ❌ Erreur lors de l'envoi : {{ error }}
+        ❌ خطأ أثناء الإرسال: {{ error }}
       </div>
     {% endif %}
 
-    <!-- Formulaire d'information -->
+    <!-- نموذج المعلومات -->
     <form method="POST" id="userForm" class="space-y-4">
-      <input type="text" name="full_name" id="full_name" required placeholder="Nom complet" class="w-full p-2 border rounded">
-      <input type="email" name="email" id="email" required placeholder="Email" class="w-full p-2 border rounded">
+      <input type="text" name="full_name" id="full_name" required placeholder="الاسم الكامل"
+             class="w-full p-2 border rounded">
+      <input type="email" name="email" id="email" required placeholder="البريد الإلكتروني"
+             class="w-full p-2 border rounded">
     </form>
 
-    <!-- Bouton PayPal -->
+    <!-- زر PayPal -->
     <div class="mt-6" id="paypal-button-container"></div>
 
     <script>
@@ -56,9 +64,6 @@
         }
       }).render('#paypal-button-container');
     </script>
-    <div class="advertisement">
-        <!-- Emplacement pour la publicité -->
-        <img src="https://via.placeholder.com/468x60?text=Publicité" alt="Publicité">
-    </div>
-  </section>
-{% endblock %}
+  </div>
+</body>
+</html>

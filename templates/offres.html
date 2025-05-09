@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Offres</title>
+
+  <!-- ✅ Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- ✅ Swiper CSS -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+  />
+</head>
+<body class="bg-white text-gray-800">
+
+  <!-- Section Swiper Offres -->
+  <section class="container mx-auto my-10 px-4">
+    <h2 class="text-center text-2xl font-semibold text-indigo-600 mb-4">🔍 Voir les détails</h2>
+
+    <div class="swiper offers-swiper swiper-container relative">
+      <div class="swiper-wrapper">
+        {% for offer in offers %}
+        <div class="swiper-slide">
+          <div class="bg-indigo-50 rounded-2xl h-96 p-4 flex flex-col justify-between items-center shadow-md hover:shadow-xl transition duration-300">
+            <img src="{{ offer.image_url }}" alt="{{ offer.title }}" class="rounded-xl mb-2 w-full h-40 object-cover">
+            <h3 class="text-xl font-semibold text-indigo-700 text-center">{{ offer.title }}</h3>
+            <p class="text-center text-gray-600 text-sm">{{ offer.description }}</p>
+            {% if offer.link %}
+            <a href="{{ offer.link }}" class="mt-3 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition" target="_blank">
+              🔗 Voir les détails
+            </a>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="swiper-pagination !bottom-2 !top-auto !w-80 mx-auto mt-4"></div>
+    </div>
+  </section>
+
+  <!-- ✅ Swiper JS -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script>
+    const swiper = new Swiper('.offers-swiper', {
+      loop: true,
+      spaceBetween: 20,
+      slidesPerView: 1,
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+      },
+      breakpoints: {
+        640: { slidesPerView: 1.2 },
+        768: { slidesPerView: 2 },
+        1024: { slidesPerView: 3 },
+      }
+    });
+  </script>
+</body>
+</html>

@@ -2,24 +2,121 @@
 {% block title %}Catalogue des Cours / قائمة الدورات{% endblock %}
 {% block content %}
 
+<!-- Styles CSS personnalisés -->
+<style>
+  .container {
+    background: radial-gradient(circle at top left, #a4a7ad38, #727b8852);    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+  }
+
+  h2 {
+    text-align: center;
+    color: #007bff;
+    margin-bottom: 10px;
+  }
+
+  /* Swiper Custom Styles */
+  .swiper {
+      background: radial-gradient(circle at top left, #0f172a, #1e293b);
+    width: 100%;
+    height: 100%;
+  }
+
+  .swiper-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .swiper-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+
+  .swiper-pagination-bullet {
+    background-color: #007bff;
+  }
+
+  .swiper-pagination-bullet-active {
+    background-color: #0056b3;
+  }
+
+  .swiper-button-prev,
+  .swiper-button-next {
+    color: #007bff;
+    transition: color 0.3s;
+  }
+
+  .swiper-button-prev:hover,
+  .swiper-button-next:hover {
+    color: #0056b3;
+  }
+
+  /* Card Styles */
+  .card {
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Button Styles */
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+
+  .btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+  }
+
+  .btn:hover {
+    opacity: 0.9;
+  }
+
+  /* Responsive Adjustments */
+  @media (max-width: 640px) {
+    .swiper-slide {
+      padding: 10px;
+    }
+    .swiper-pagination {
+      bottom: 0;
+    }
+  }
+</style>
+
 <!-- Swiper CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
 
 <!-- Section Offres -->
-<section class="container my-5">
-  <h1 class="text-center text-3xl font-bold text-indigo-600 mb-6">🌟 Offres Spéciales / عروضنا الخاصة</h1>
+<section class="container my-1">
+  <h2 class="text-center text-2xl font-semibold text-indigo-600 mb-2">🔍 Voir les détails</h2>
 
-  <div class="swiper offers-swiper swiper-container relative">
+  <div class="swiper offers-swiper relative">
     <div class="swiper-wrapper">
       {% for offer in offers %}
       <div class="swiper-slide">
-        <div class="bg-indigo-50 rounded-2xl h-96 p-4 flex flex-col justify-between items-center shadow-md">
+        <div class="bg-indigo-50 rounded-2xl h-96 p-4 flex flex-col justify-between items-center shadow-md hover:shadow-xl transition duration-300">
           <img src="{{ offer.image_url }}" alt="{{ offer.title }}" class="rounded-xl mb-2 w-full h-40 object-cover">
           <h3 class="text-xl font-semibold text-indigo-700 text-center">{{ offer.title }}</h3>
           <p class="text-center text-gray-600 text-sm">{{ offer.description }}</p>
           {% if offer.link %}
           <a href="{{ offer.link }}" class="mt-3 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition" target="_blank">
-            🔗 Voir l'offre
+            🔗 Voir les détails
           </a>
           {% endif %}
         </div>
@@ -28,38 +125,39 @@
     </div>
     <!-- Pagination -->
     <div class="swiper-pagination !bottom-2 !top-auto !w-80 mx-auto mt-4"></div>
+    <!-- Navigation Buttons -->
+    <div class="swiper-button-prev text-indigo-600"></div>
+    <div class="swiper-button-next text-indigo-600"></div>
   </div>
 </section>
 
 <!-- Section Cours -->
 <section class="container my-5">
-  <h1 class="text-center text-3xl font-bold text-primary mb-4">📚 Nos Cours / دوراتنا التعليمية</h1>
+  <h1 class="text-center text-3xl font-bold text-primary mb-4">📚 Nos Cours</h1>
 
   <!-- Barre de recherche -->
-  <form action="{{ url_for('search') }}" method="get" class="mb-4">
-    <input type="text" name="query" placeholder="Rechercher un cours" class="w-full p-2 border rounded">
-    <button type="submit" class="btn btn-primary">Rechercher</button>
+  <form action="{{ url_for('search') }}" method="get" class="mb-4 flex justify-center">
+    <input type="text" name="query" placeholder="Rechercher un cours" class="w-1/2 p-2 border rounded-l-md">
+    <button type="submit" class="btn btn-primary px-4 py-2 rounded-r-md">Rechercher</button>
   </form>
 
   <!-- Liste des Cours -->
-  <div class="row">
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
     {% for course in courses.items %}
-    <div class="col-md-4 mb-4">
-      <div class="card h-100 d-flex flex-column">
-        {% if course.image_url %}
-        <img src="{{ course.image_url }}" class="card-img-top" alt="Image de {{ course.title }}" style="height: 200px; object-fit: cover;">
-        {% endif %}
-        <div class="card-body d-flex flex-column">
-          <h5 class="card-title text-truncate">{{ course.title }}</h5>
-          <p class="card-text flex-grow-1" style="overflow: hidden; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical;">
-            {{ course.description }}
-          </p>
-          <p class="card-text fw-bold mb-1">💰 Prix : {{ course.price }} €</p>
-          <p class="card-text text-muted mb-3">📂 Catégorie : {{ course.categorie }}</p>
-          <div class="mt-auto">
-            <a href="{{ url_for('course_detail', course_id=course.id) }}" class="btn btn-primary btn-sm w-100 mb-2">📖 Voir Détails</a>
-            <a href="{{ url_for('checkout', course_id=course.id) }}" class="btn btn-success btn-sm w-100">🛒 Acheter</a>
-          </div>
+    <div class="card h-full bg-white border rounded-lg shadow-md hover:shadow-xl transition duration-300">
+      {% if course.image_url %}
+      <img src="{{ course.image_url }}" class="card-img-top rounded-t-lg" alt="Image de {{ course.title }}" style="height: 200px; object-fit: cover;">
+      {% endif %}
+      <div class="card-body d-flex flex-col p-4">
+        <h5 class="card-title text-xl font-semibold text-gray-800 mb-2 text-truncate">{{ course.title }}</h5>
+        <p class="card-text text-gray-600 flex-grow-1" style="overflow: hidden; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical;">
+          {{ course.description }}
+        </p>
+        <p class="card-text fw-bold mb-1 text-green-600">💰 Prix : {{ course.price }} €</p>
+        <p class="card-text text-muted mb-3">📂 Catégorie : {{ course.categorie }}</p>
+        <div class="mt-auto flex flex-col gap-2">
+          <a href="{{ url_for('course_detail', course_id=course.id) }}" class="btn btn-primary btn-sm w-full">📖 Voir Détails</a>
+          <a href="{{ url_for('checkout', course_id=course.id) }}" class="btn btn-success btn-sm w-full">🛒 Acheter</a>
         </div>
       </div>
     </div>
@@ -67,7 +165,7 @@
   </div>
 
   <!-- Pagination -->
-  <nav aria-label="Page navigation">
+  <nav aria-label="Page navigation" class="mt-6">
     <ul class="pagination justify-content-center">
       {% if courses.has_prev %}
       <li class="page-item">
@@ -112,11 +210,8 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    new Swiper('.offers-swiper', {
+    var swiper = new Swiper('.offers-swiper', {
       loop: true,
-      spaceBetween: 20,
-      slidesPerView: 1,
-      centeredSlides: true,
       autoplay: {
         delay: 5000,
         disableOnInteraction: false,
@@ -125,11 +220,26 @@
         el: '.swiper-pagination',
         clickable: true,
       },
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
       breakpoints: {
-        640: { slidesPerView: 1 },
-        768: { slidesPerView: 2 },
-        1024: { slidesPerView: 3 }
-      }
+        320: {
+          slidesPerView: 1,
+          spaceBetween: 10,
+        },
+        640: {
+          slidesPerView: 2,
+          spaceBetween: 20,
+        },
+        1024: {
+          slidesPerView: 3,
+          spaceBetween: 30,
+        },
+      },
+      effect: 'slide',
+      speed: 600,
     });
   });
 </script>
