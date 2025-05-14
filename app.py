@@ -3,19 +3,23 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail, Message
 import config
 from math import ceil
+import urllib.parse  # Pour encoder le mot de passe MySQL
 
 app = Flask(__name__)
-app.secret_key = 'supersecretkey'  # Remplacez par une clé plus sécurisée
+app.secret_key = 'supersecretkey'
 
-# Configuration de la base de données
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://sql7776904:25FjtMPp8T@sql7.freesqldatabase.com:3306/sql7776904'
+# Encodage du mot de passe SQL qui contient des caractères spéciaux
+password = urllib.parse.quote_plus('$5KUMKWeD4*h7$d')
+
+# Configuration base de données
+app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://freedb_freedb_sql7776904:{password}@sql.freedb.tech/freedb_sql7776904'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Configuration de Flask-Mail
+# Configuration Flask-Mail (⚠️ ne jamais exposer les vrais identifiants Gmail en public)
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USERNAME'] = 'tariq.haoudi@etu.uae.ac.ma'
-app.config['MAIL_PASSWORD'] = 'cjgf gmzu mbef lwlh'
+app.config['MAIL_PASSWORD'] = 'ton_mot_de_passe_application'  # Utilise un mot de passe d’application Gmail
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 
@@ -40,6 +44,7 @@ class Offer(db.Model):
     description = db.Column(db.Text)
     image_url = db.Column(db.Text)
     link = db.Column(db.Text)
+
 
 # Import de config.py
 ADMIN_USERNAME = config.ADMIN_USERNAME
