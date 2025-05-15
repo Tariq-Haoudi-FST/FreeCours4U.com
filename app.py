@@ -54,7 +54,7 @@ ADMIN_PASSWORD = config.ADMIN_PASSWORD
 def index():
     categories = db.session.query(Course.categorie).distinct().all()
     page = request.args.get('page', 1, type=int)
-    per_page = 6
+    per_page = 8
     courses = Course.query.paginate(page=page, per_page=per_page, error_out=False)
     offers = Offer.query.all()
     return render_template('index.html', courses=courses, categories=categories, offers=offers)
