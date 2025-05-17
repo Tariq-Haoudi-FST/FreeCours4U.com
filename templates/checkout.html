@@ -11,6 +11,7 @@
   <div class="container mx-auto py-10 max-w-md">
     <h2 class="text-2xl font-bold mb-6">💳 الدفع لـ: {{ course.title }}</h2>
 
+
     <form method="POST"
           action="{{ url_for('create_order', course_id=course.id) }}"
           id="userForm"
