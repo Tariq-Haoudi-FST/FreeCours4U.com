@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>الدفع - {{ course.title }}</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- PayPal SDK -->
@@ -24,17 +24,40 @@
     <!-- نموذج المعلومات -->
     <form method="POST" id="userForm" class="space-y-4">
       <input type="text" name="full_name" id="full_name" required placeholder="الاسم الكامل"
-             class="w-full p-2 border rounded">
+             class="w-full p-2 border rounded" />
       <input type="email" name="email" id="email" required placeholder="البريد الإلكتروني"
-             class="w-full p-2 border rounded">
+             class="w-full p-2 border rounded" />
     </form>
 
     <!-- زر PayPal -->
     <div class="mt-6" id="paypal-button-container"></div>
+<script>
+  paypal.Buttons({
+    createOrder: function(data, actions) {
+      const fullName = document.getElementById("full_name").value;
+      const email = document.getElementById("email").value;
 
-    <script>
-      paypal.Buttons({
-        createOrder: function(data, actions) {
+      if (!fullName || !email) {
+        alert("يرجى إدخال الاسم الكامل والبريد الإلكتروني.");
+        return;
+      }
+
+      // نرسل البيانات إلى الخادم قبل بدء الدفع
+      return fetch("/checkout/{{ course.id }}", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: new URLSearchParams({
+          full_name: fullName,
+          email: email,
+          stage: "before_payment"
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // إذا تم الحفظ، نبدأ إنشاء عملية الدفع
           return actions.order.create({
             purchase_units: [{
               amount: {
@@ -42,28 +65,28 @@
               }
             }]
           });
-        },
-        onApprove: function(data, actions) {
-          return actions.order.capture().then(function(details) {
-            fetch("/checkout/{{ course.id }}", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-              },
-              body: new URLSearchParams({
-                full_name: document.getElementById("full_name").value,
-                email: document.getElementById("email").value,
-                card_number: "paypal",
-                expiry: "paypal",
-                cvv: "paypal"
-              })
-            }).then(() => {
-              window.location.reload();
-            });
-          });
+        } else {
+          alert("❌ فشل في حفظ البيانات: " + data.error);
+          return;
         }
-      }).render('#paypal-button-container');
-    </script>
+      })
+      .catch(error => {
+        alert("❌ حدث خطأ في الاتصال بالخادم: " + error);
+      });
+    },
+
+    onApprove: function(data, actions) {
+      return actions.order.capture().then(function(details) {
+        // الدفع تم بنجاح، يمكننا عرض رسالة نجاح فقط أو تسجيل ذلك لاحقًا
+        const successDiv = document.createElement("div");
+        successDiv.className = "bg-green-100 text-green-800 p-4 rounded mb-4";
+        successDiv.innerText = "✅ تم الدفع بنجاح! سيتم إرسال الدورة إلى بريدك الإلكتروني قريباً.";
+        document.querySelector(".container").prepend(successDiv);
+      });
+    }
+  }).render('#paypal-button-container');
+</script>
+
   </div>
 </body>
 </html>

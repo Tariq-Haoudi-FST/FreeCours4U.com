@@ -37,6 +37,7 @@ class Course(db.Model):
     categorie = db.Column(db.String(100))
     image_url = db.Column(db.Text)
 
+
 class Offer(db.Model):
     __tablename__ = 'offers'
     id = db.Column(db.Integer, primary_key=True)
@@ -100,9 +101,18 @@ def course_detail(course_id):
 @app.route('/checkout/<int:course_id>', methods=["GET", "POST"])
 def checkout(course_id):
     course = Course.query.get_or_404(course_id)
+    
     if request.method == "POST":
         full_name = request.form['full_name']
         email = request.form['email']
+        stage = request.form.get('stage')  # نضيف هذا السطر للتحقق من المرحلة
+
+        if stage == "before_payment":
+            # هنا يمكن حفظ الاسم والإيميل في قاعدة البيانات أو تسجيل الدخول مثلاً
+            print(f"✅ البيانات قبل الدفع: {full_name} - {email}")
+            return jsonify(success=True)
+
+        # هنا نرسل الرابط بعد الدفع فقط
         msg = Message(subject='🎓 رابط الدورة التعليمية', sender=app.config['MAIL_USERNAME'], recipients=[email])
         msg.body = f"""مرحباً {full_name},
 
@@ -118,12 +128,15 @@ def checkout(course_id):
             return jsonify(success=True)
         except Exception as e:
             return jsonify(success=False, error=str(e))
+
     return render_template('checkout.html', course=course)
 
 @app.route('/about')
 def about():
     return render_template('about.html')
-
+@app.route('/jdid')
+def jdid():
+    return render_template('jdid.html')
 @app.route('/privacy')
 def privacy():
     return render_template('privacy.html')
@@ -235,6 +248,67 @@ def delete_offer(id):
     db.session.delete(offer)
     db.session.commit()
     return redirect(url_for('admin_panel'))
+
+
+
+# إضافة نموذج الدفع:
+class Payment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    course_id = db.Column(db.Integer)
+    full_name = db.Column(db.String(100))
+    email = db.Column(db.String(100))
+    method = db.Column(db.String(50))
+    transaction_id = db.Column(db.String(100), nullable=True)
+
+# نقطة نهاية لإنشاء سجل الدفع عند بداية العملية
+@app.route('/init-payment/<int:course_id>', methods=['POST'])
+def init_payment(course_id):
+    full_name = request.form['full_name']
+    email = request.form['email']
+
+    payment = Payment(
+        course_id=course_id,
+        full_name=full_name,
+        email=email,
+        method='paypal',
+        transaction_id=None
+    )
+    db.session.add(payment)
+    db.session.commit()
+
+    return jsonify({'payment_id': payment.id})
+
+# نقطة نهاية لتأكيد الدفع بعد إتمامه
+@app.route('/confirm-payment', methods=['POST'])
+def confirm_payment():
+    payment_id = request.form['payment_id']
+    transaction_id = request.form['transaction_id']
+
+    payment = Payment.query.get(payment_id)
+    if payment:
+        payment.transaction_id = transaction_id
+        db.session.commit()
+
+        # نرسل الإيميل
+        course = Course.query.get(payment.course_id)
+        msg = Message(subject='🎓 رابط الدورة التعليمية',
+                      sender=app.config['MAIL_USERNAME'],
+                      recipients=[payment.email])
+        msg.body = f"""مرحباً {payment.full_name},
+
+✅ شكراً لدفعك لدورة: {course.title}
+
+🔗 هذا هو رابط الدورة الخاص بك:
+{course.link}
+
+نتمنى لك تعلماً موفقاً!
+"""
+        try:
+            mail.send(msg)
+        except Exception as e:
+            print("❌ فشل في إرسال الإيميل:", e)
+
+    return '', 204
 
 if __name__ == '__main__':
     app.run(debug=True)
