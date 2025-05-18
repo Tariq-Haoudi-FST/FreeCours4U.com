@@ -1,5 +1,4 @@
 Flask
 Flask-Mail
-flask-mysqldb 
 flask-sqlalchemy
 pymysql
